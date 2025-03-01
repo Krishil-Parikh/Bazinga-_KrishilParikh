@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../../../public/fonts/Vampire Wars.ttf') format('truetype');
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.logo {
+    font-size: 2rem;
+    font-weight: 500;
+    font-family: "MyCustomFont", sans-serif;
+    color: #383838;
+}
