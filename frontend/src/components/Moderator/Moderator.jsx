@@ -20,15 +20,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import toast, { Toaster } from "react-hot-toast";
 
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  // Sidebar,
+  // SidebarContent,
+  // SidebarGroup,
+  // SidebarGroupContent,
+  // SidebarGroupLabel,
+  // SidebarHeader,
+  // SidebarMenu,
+  // SidebarMenuButton,
+  // SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
@@ -129,14 +129,14 @@ export default function ModeratorInterface() {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         {/* Sidebar */}
-        <SidebarInterface/>
+        {/* <SidebarInterface/> */}
 
         {/* Main Content */}
         <div className="flex flex-col flex-1 justify-center w-">
           {/* Header */}
           <header className="border-b">
             <div className="flex h-16 items-center px-4 gap-4">
-              <SidebarTrigger />
+              {/* <SidebarTrigger /> */}
               <div className="flex-1 flex items-center">
                 <div className="relative w-full max-w-sm">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
