@@ -5,6 +5,7 @@ import AuthPage from "./components/AuthPage/AuthPage";
 import ModeratorInterface from "./components/Moderator/Moderator";
 import Navbar from "./components/Navbar/Navbar";
 import Page from "./components/Hospital/page";
+import PatientDashboard from "./components/Patient/PatientDashboard";
 
 const App = () => {
 
@@ -25,11 +26,14 @@ const App = () => {
               <AuthPage/>
             </>
           } />
-        <Route path="/moderator" element={
+        <Route path="/moderator" element={ // Moderator Interface
               <ModeratorInterface/>
           } />
-        <Route path="/Hdashboard" element={
+        <Route path="/Hdashboard" element={ // Hospital Dashboard
               <Page/>
+          } />
+        <Route path="/HPatient" element={ // Hospital Patients
+              <PatientDashboard/>
           } />
         </Routes>
       </BrowserRouter>

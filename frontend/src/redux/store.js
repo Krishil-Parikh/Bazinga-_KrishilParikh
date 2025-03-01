@@ -3,19 +3,18 @@ import SidebarReducer from "./SidebarSlice/SidebarSlice";
 import UploadReducer from "./UploadSlice/UploadSlice";
 import UserReducer from "./UserSlice/UserSlice";
 import TranscriptReducer from "./Transcript/Transcript";
-import LipsingReducer from "./Lipsing/Lipsing";
-import AnimationReducer from "./Lipsing/Animation";
 import NotingReducer from "./NotingSlice/NotingSlice";
+import notificationReducer from "./NotificationSlice/NotificationSlice";
+
 
 const store = configureStore({
     reducer:{
         sidebar : SidebarReducer,
         upload : UploadReducer,
         user : UserReducer,
+        notifications: notificationReducer,
         transcript:TranscriptReducer,
-        lipsing : LipsingReducer,
-        animation : AnimationReducer,
-        noting:NotingReducer
+        noting:NotingReducer,
     },
 });
 
