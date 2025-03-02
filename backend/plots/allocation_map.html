@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d20b3e4194a0b8d33359b41e40779280 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_d20b3e4194a0b8d33359b41e40779280" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_d20b3e4194a0b8d33359b41e40779280 = L.map(
+                "map_d20b3e4194a0b8d33359b41e40779280",
+                {
+                    center: [40.741104939264595, -99.2465019903573],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_60cb395a1778c166749ef29fa268cae8 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_60cb395a1778c166749ef29fa268cae8.addTo(map_d20b3e4194a0b8d33359b41e40779280);
+        
+    
+            var marker_cluster_8efa06155f540b2d175e291f0f885821 = L.markerClusterGroup(
+                {}
+            );
+        
+    
+            var marker_d85f57fc435f7706897bc99e2d50019d = L.marker(
+                [40.01532163807015, -99.95904517859462],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_ac26f36481045fdcf800b40ebee3248c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_d85f57fc435f7706897bc99e2d50019d.setIcon(icon_ac26f36481045fdcf800b40ebee3248c);
+        
+    
+        var popup_fcbe104800eae053987fdf504bf9a6b8 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_3b18b0fceaa104e1e193df498e5872dc = $(`<div id="html_3b18b0fceaa104e1e193df498e5872dc" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_0</b><br>                 Region: North<br>                 Beds: 1500<br>Staff: 600<br>Medical Kits: 3000<br></div>`)[0];
+                popup_fcbe104800eae053987fdf504bf9a6b8.setContent(html_3b18b0fceaa104e1e193df498e5872dc);
+            
+        
+
+        marker_d85f57fc435f7706897bc99e2d50019d.bindPopup(popup_fcbe104800eae053987fdf504bf9a6b8)
+        ;
+
+        
+    
+    
+            var marker_cd3bdd8fcd13956b6fc8a0d4cad9d57b = L.marker(
+                [40.0844705017182, -99.91840705922068],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_7326148d73cdda4c2ba0c695fbc119f5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_cd3bdd8fcd13956b6fc8a0d4cad9d57b.setIcon(icon_7326148d73cdda4c2ba0c695fbc119f5);
+        
+    
+        var popup_7e755961fc803b18fa33f9e880e7ea1c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e081ab00f80e939153f9469dd3beef35 = $(`<div id="html_e081ab00f80e939153f9469dd3beef35" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_1</b><br>                 Region: North<br>                 Beds: 1600<br>Staff: 650<br>Medical Kits: 3200<br></div>`)[0];
+                popup_7e755961fc803b18fa33f9e880e7ea1c.setContent(html_e081ab00f80e939153f9469dd3beef35);
+            
+        
+
+        marker_cd3bdd8fcd13956b6fc8a0d4cad9d57b.bindPopup(popup_7e755961fc803b18fa33f9e880e7ea1c)
+        ;
+
+        
+    
+    
+            var marker_00dc35a07aff65f94dac9e67dde53b06 = L.marker(
+                [39.9762170405343, -99.91233021851673],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_d911b847b2abdcf6b6b6577ac3c6d10d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_00dc35a07aff65f94dac9e67dde53b06.setIcon(icon_d911b847b2abdcf6b6b6577ac3c6d10d);
+        
+    
+        var popup_e48b21c0b73d2b57b549475d9da7515f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0b1538458bc631cfac311ccbe0c7e84e = $(`<div id="html_0b1538458bc631cfac311ccbe0c7e84e" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_2</b><br>                 Region: North<br>                 Beds: 1400<br>Staff: 550<br>Medical Kits: 2800<br></div>`)[0];
+                popup_e48b21c0b73d2b57b549475d9da7515f.setContent(html_0b1538458bc631cfac311ccbe0c7e84e);
+            
+        
+
+        marker_00dc35a07aff65f94dac9e67dde53b06.bindPopup(popup_e48b21c0b73d2b57b549475d9da7515f)
+        ;
+
+        
+    
+    
+            var marker_620092da9c46c16491590a9f09432c57 = L.marker(
+                [39.983186945048146, -100.03479557557809],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_ddba88c0b7dc64518ad388b8509ea09d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_620092da9c46c16491590a9f09432c57.setIcon(icon_ddba88c0b7dc64518ad388b8509ea09d);
+        
+    
+        var popup_fdd30d071413b77c58003906069ed438 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_15e68738034f328528613789ff4ce6f0 = $(`<div id="html_15e68738034f328528613789ff4ce6f0" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_3</b><br>                 Region: North<br>                 Beds: 1700<br>Staff: 680<br>Medical Kits: 3400<br></div>`)[0];
+                popup_fdd30d071413b77c58003906069ed438.setContent(html_15e68738034f328528613789ff4ce6f0);
+            
+        
+
+        marker_620092da9c46c16491590a9f09432c57.bindPopup(popup_fdd30d071413b77c58003906069ed438)
+        ;
+
+        
+    
+    
+            var marker_8987bb3b1038158790f02eb590cd0e44 = L.marker(
+                [40.023682815583754, -100.00203044244944],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_580a38ec4d01a6ef2e82f8328cab14e3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_8987bb3b1038158790f02eb590cd0e44.setIcon(icon_580a38ec4d01a6ef2e82f8328cab14e3);
+        
+    
+        var popup_00995bd0c1ee58fd10ad2039cf0afeb5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_cad8a18f55b15eecd7a2c18b71f12b93 = $(`<div id="html_cad8a18f55b15eecd7a2c18b71f12b93" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_4</b><br>                 Region: North<br>                 Beds: 1800<br>Staff: 720<br>Medical Kits: 3600<br></div>`)[0];
+                popup_00995bd0c1ee58fd10ad2039cf0afeb5.setContent(html_cad8a18f55b15eecd7a2c18b71f12b93);
+            
+        
+
+        marker_8987bb3b1038158790f02eb590cd0e44.bindPopup(popup_00995bd0c1ee58fd10ad2039cf0afeb5)
+        ;
+
+        
+    
+    
+            var marker_b01ed932531c3368770acf285389585e = L.marker(
+                [39.98755451257123, -99.97015218892015],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_5e75e0b2951cdb6b38411dce33d81686 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_b01ed932531c3368770acf285389585e.setIcon(icon_5e75e0b2951cdb6b38411dce33d81686);
+        
+    
+        var popup_4d129d1b728624269d188773e50cbda3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b7b1a28bc95fb22e7228206f11870d00 = $(`<div id="html_b7b1a28bc95fb22e7228206f11870d00" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_5</b><br>                 Region: North<br>                 Beds: 1300<br>Staff: 520<br>Medical Kits: 2600<br></div>`)[0];
+                popup_4d129d1b728624269d188773e50cbda3.setContent(html_b7b1a28bc95fb22e7228206f11870d00);
+            
+        
+
+        marker_b01ed932531c3368770acf285389585e.bindPopup(popup_4d129d1b728624269d188773e50cbda3)
+        ;
+
+        
+    
+    
+            var marker_416a87dda6e72eaa65e8abddb345dba6 = L.marker(
+                [39.926240436211174, -100.02546224483457],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_f00cffa86e587f6aba610cf6aac8e839 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_416a87dda6e72eaa65e8abddb345dba6.setIcon(icon_f00cffa86e587f6aba610cf6aac8e839);
+        
+    
+        var popup_dc7ce55ab02505757483feff6e726a41 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b54b9bbe1538c2f1307d0ed1d1a3c5ca = $(`<div id="html_b54b9bbe1538c2f1307d0ed1d1a3c5ca" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_6</b><br>                 Region: North<br>                 Beds: 1900<br>Staff: 760<br>Medical Kits: 3800<br></div>`)[0];
+                popup_dc7ce55ab02505757483feff6e726a41.setContent(html_b54b9bbe1538c2f1307d0ed1d1a3c5ca);
+            
+        
+
+        marker_416a87dda6e72eaa65e8abddb345dba6.bindPopup(popup_dc7ce55ab02505757483feff6e726a41)
+        ;
+
+        
+    
+    
+            var marker_f2146b6725b1f7fdbfff0d77e6b34e85 = L.marker(
+                [40.067295510501566, -100.01335902382907],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_f44786a69f813affea0f7db65159b4e4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_f2146b6725b1f7fdbfff0d77e6b34e85.setIcon(icon_f44786a69f813affea0f7db65159b4e4);
+        
+    
+        var popup_b23e5014e350843e32248d96c1932293 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_22797ba6f39abc74554e0ccf6f49ae87 = $(`<div id="html_22797ba6f39abc74554e0ccf6f49ae87" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_7</b><br>                 Region: North<br>                 Beds: 1450<br>Staff: 580<br>Medical Kits: 2900<br></div>`)[0];
+                popup_b23e5014e350843e32248d96c1932293.setContent(html_22797ba6f39abc74554e0ccf6f49ae87);
+            
+        
+
+        marker_f2146b6725b1f7fdbfff0d77e6b34e85.bindPopup(popup_b23e5014e350843e32248d96c1932293)
+        ;
+
+        
+    
+    
+            var marker_16963f82c41970338422d5615b511e55 = L.marker(
+                [39.92002140012069, -100.05815508684864],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_30fca29b6a2927653b990411c6bbe849 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_16963f82c41970338422d5615b511e55.setIcon(icon_30fca29b6a2927653b990411c6bbe849);
+        
+    
+        var popup_75a6fdd13485518b40c9a63168552030 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fb63a44b436a7f3c1224d95b4e0f9e8b = $(`<div id="html_fb63a44b436a7f3c1224d95b4e0f9e8b" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_8</b><br>                 Region: North<br>                 Beds: 1750<br>Staff: 700<br>Medical Kits: 3500<br></div>`)[0];
+                popup_75a6fdd13485518b40c9a63168552030.setContent(html_fb63a44b436a7f3c1224d95b4e0f9e8b);
+            
+        
+
+        marker_16963f82c41970338422d5615b511e55.bindPopup(popup_75a6fdd13485518b40c9a63168552030)
+        ;
+
+        
+    
+    
+            var marker_2b61cfc4ab26b278cfb7136706daa1f2 = L.marker(
+                [39.96152195120846, -99.93082760585983],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_6981630de6c2f00fa3ad6134b176c971 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_2b61cfc4ab26b278cfb7136706daa1f2.setIcon(icon_6981630de6c2f00fa3ad6134b176c971);
+        
+    
+        var popup_d6ef91ddf2574e49c77a151f54ca1719 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_b23d93dadc26ca6775bd471ea4608740 = $(`<div id="html_b23d93dadc26ca6775bd471ea4608740" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_9</b><br>                 Region: North<br>                 Beds: 1550<br>Staff: 620<br>Medical Kits: 3100<br></div>`)[0];
+                popup_d6ef91ddf2574e49c77a151f54ca1719.setContent(html_b23d93dadc26ca6775bd471ea4608740);
+            
+        
+
+        marker_2b61cfc4ab26b278cfb7136706daa1f2.bindPopup(popup_d6ef91ddf2574e49c77a151f54ca1719)
+        ;
+
+        
+    
+    
+            var marker_a78b68f0fdc9a052b5491d10945c5c74 = L.marker(
+                [39.99303520334201, -99.97948680955558],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_16fae810026e91d74381a077f663bc88 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_a78b68f0fdc9a052b5491d10945c5c74.setIcon(icon_16fae810026e91d74381a077f663bc88);
+        
+    
+        var popup_dfcecb35cca43d6bb580a62c9f9047ea = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_250217b32f81dd9b336b8d824a6f80b5 = $(`<div id="html_250217b32f81dd9b336b8d824a6f80b5" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_10</b><br>                 Region: North<br>                 Beds: 1650<br>Staff: 660<br>Medical Kits: 3300<br></div>`)[0];
+                popup_dfcecb35cca43d6bb580a62c9f9047ea.setContent(html_250217b32f81dd9b336b8d824a6f80b5);
+            
+        
+
+        marker_a78b68f0fdc9a052b5491d10945c5c74.bindPopup(popup_dfcecb35cca43d6bb580a62c9f9047ea)
+        ;
+
+        
+    
+    
+            var marker_36cf70ffcc479c625b83fa76d69b993d = L.marker(
+                [39.978276466539896, -99.92519495568138],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_3255294b648a5f97246190a1c73aa652 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_36cf70ffcc479c625b83fa76d69b993d.setIcon(icon_3255294b648a5f97246190a1c73aa652);
+        
+    
+        var popup_4a14723be2053ffe05d221ed96e4a8db = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_28514f72d5d2ca138cbf76ba81aabd75 = $(`<div id="html_28514f72d5d2ca138cbf76ba81aabd75" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_11</b><br>                 Region: North<br>                 Beds: 1350<br>Staff: 540<br>Medical Kits: 2700<br></div>`)[0];
+                popup_4a14723be2053ffe05d221ed96e4a8db.setContent(html_28514f72d5d2ca138cbf76ba81aabd75);
+            
+        
+
+        marker_36cf70ffcc479c625b83fa76d69b993d.bindPopup(popup_4a14723be2053ffe05d221ed96e4a8db)
+        ;
+
+        
+    
+    
+            var marker_6f32734e861756db3997415b0ae958a1 = L.marker(
+                [39.95550173001817, -100.04469276219002],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_4a25dd843953ee7dc69aeef1356e7ff7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_6f32734e861756db3997415b0ae958a1.setIcon(icon_4a25dd843953ee7dc69aeef1356e7ff7);
+        
+    
+        var popup_bda5a30341ca3d413416664e696af075 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_f2a7c60ea7cc9a4ffdbb3d011413b33e = $(`<div id="html_f2a7c60ea7cc9a4ffdbb3d011413b33e" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_12</b><br>                 Region: North<br>                 Beds: 1850<br>Staff: 740<br>Medical Kits: 3700<br></div>`)[0];
+                popup_bda5a30341ca3d413416664e696af075.setContent(html_f2a7c60ea7cc9a4ffdbb3d011413b33e);
+            
+        
+
+        marker_6f32734e861756db3997415b0ae958a1.bindPopup(popup_bda5a30341ca3d413416664e696af075)
+        ;
+
+        
+    
+    
+            var marker_ff4d04e84bb286b39f8da12893fa6027 = L.marker(
+                [39.965230881692236, -99.91638010138983],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_a1737b3b6167bf09a3010946e063c4a2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_ff4d04e84bb286b39f8da12893fa6027.setIcon(icon_a1737b3b6167bf09a3010946e063c4a2);
+        
+    
+        var popup_a5b3c97cf37dae7341e03aa693800e40 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a433498694b1a850809e7a5d68656b1c = $(`<div id="html_a433498694b1a850809e7a5d68656b1c" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_13</b><br>                 Region: North<br>                 Beds: 1480<br>Staff: 590<br>Medical Kits: 2950<br></div>`)[0];
+                popup_a5b3c97cf37dae7341e03aa693800e40.setContent(html_a433498694b1a850809e7a5d68656b1c);
+            
+        
+
+        marker_ff4d04e84bb286b39f8da12893fa6027.bindPopup(popup_a5b3c97cf37dae7341e03aa693800e40)
+        ;
+
+        
+    
+    
+            var marker_0d2d2f7c61b6b28e160b6388ef67b0eb = L.marker(
+                [39.97885834229525, -100.02977790678328],
+                {}
+            ).addTo(marker_cluster_8efa06155f540b2d175e291f0f885821);
+        
+    
+            var icon_b71f3e3f7e5006734569991c1789b8b9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "medkit", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_0d2d2f7c61b6b28e160b6388ef67b0eb.setIcon(icon_b71f3e3f7e5006734569991c1789b8b9);
+        
+    
+        var popup_11797bee62d0e4bc661c55e86b10c22d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_755920342b5256e452297ed7708385ad = $(`<div id="html_755920342b5256e452297ed7708385ad" style="width: 100.0%; height: 100.0%;">                 <b>Supplier_14</b><br>                 Region: North<br>                 Beds: 1720<br>Staff: 690<br>Medical Kits: 3450<br></div>`)[0];
+                popup_11797bee62d0e4bc661c55e86b10c22d.setContent(html_755920342b5256e452297ed7708385ad);
+            
+        
+
+        marker_0d2d2f7c61b6b28e160b6388ef67b0eb.bindPopup(popup_11797bee62d0e4bc661c55e86b10c22d)
+        ;
+
+        
+    
+    
+            marker_cluster_8efa06155f540b2d175e291f0f885821.addTo(map_d20b3e4194a0b8d33359b41e40779280);
+        
+    
+            var marker_cluster_bf03766ad599ea8e13ae80395a4b3a26 = L.markerClusterGroup(
+                {}
+            );
+        
+    
+            var marker_f78e282d297da803cdeeb0dc94b4ed87 = L.marker(
+                [39.990942111939454, -99.92240065902796],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_297da6b0e64adf8d555c6b28f52803c2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_f78e282d297da803cdeeb0dc94b4ed87.setIcon(icon_297da6b0e64adf8d555c6b28f52803c2);
+        
+    
+        var popup_babf880f2a9595e55be2daa9ba7c8c1e = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c0bb2de60c525f7cbfb9b1b12333dc14 = $(`<div id="html_c0bb2de60c525f7cbfb9b1b12333dc14" style="width: 100.0%; height: 100.0%;">                 <b>North General</b><br>                 Region: North<br>                 Capacity: 120<br>                 Current Patients: 380<br>                 Newly Assigned: 120<br>                 Utilization: 416.7%                 </div>`)[0];
+                popup_babf880f2a9595e55be2daa9ba7c8c1e.setContent(html_c0bb2de60c525f7cbfb9b1b12333dc14);
+            
+        
+
+        marker_f78e282d297da803cdeeb0dc94b4ed87.bindPopup(popup_babf880f2a9595e55be2daa9ba7c8c1e)
+        ;
+
+        
+    
+    
+            var marker_b050fe42e2fd0a740bce4ba61560221c = L.marker(
+                [39.99833418261127, -100.06350828068292],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_49df1bec71c0baece9d9ed7dfa6c4300 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_b050fe42e2fd0a740bce4ba61560221c.setIcon(icon_49df1bec71c0baece9d9ed7dfa6c4300);
+        
+    
+        var popup_3a5f5a2f03f074d63e57fe11491016cd = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_83184f4621e9cfa06334103a5e52e414 = $(`<div id="html_83184f4621e9cfa06334103a5e52e414" style="width: 100.0%; height: 100.0%;">                 <b>North Memorial</b><br>                 Region: North<br>                 Capacity: 145<br>                 Current Patients: 405<br>                 Newly Assigned: 145<br>                 Utilization: 379.3%                 </div>`)[0];
+                popup_3a5f5a2f03f074d63e57fe11491016cd.setContent(html_83184f4621e9cfa06334103a5e52e414);
+            
+        
+
+        marker_b050fe42e2fd0a740bce4ba61560221c.bindPopup(popup_3a5f5a2f03f074d63e57fe11491016cd)
+        ;
+
+        
+    
+    
+            var marker_3aa7d6c980802a1adbaf6a5bb73223a6 = L.marker(
+                [39.948838452966264, -99.92607455528452],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_79f346fc41ec460dfc115efe8cb4bd03 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_3aa7d6c980802a1adbaf6a5bb73223a6.setIcon(icon_79f346fc41ec460dfc115efe8cb4bd03);
+        
+    
+        var popup_97135569c599e1b7587832fa293c7eb0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ef4f7284560ab68a5cad3eac706a0533 = $(`<div id="html_ef4f7284560ab68a5cad3eac706a0533" style="width: 100.0%; height: 100.0%;">                 <b>North Community</b><br>                 Region: North<br>                 Capacity: 110<br>                 Current Patients: 340<br>                 Newly Assigned: 110<br>                 Utilization: 409.1%                 </div>`)[0];
+                popup_97135569c599e1b7587832fa293c7eb0.setContent(html_ef4f7284560ab68a5cad3eac706a0533);
+            
+        
+
+        marker_3aa7d6c980802a1adbaf6a5bb73223a6.bindPopup(popup_97135569c599e1b7587832fa293c7eb0)
+        ;
+
+        
+    
+    
+            var marker_87b7d6f698d5d5e7fb149f9fc952f8cc = L.marker(
+                [39.94484384482203, -100.0077494501565],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_1ec02ebd5c51a1fada1bee468aaf1014 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_87b7d6f698d5d5e7fb149f9fc952f8cc.setIcon(icon_1ec02ebd5c51a1fada1bee468aaf1014);
+        
+    
+        var popup_b009498e976e908f852cad004c4e1212 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2f7679b9897d48620342396387468705 = $(`<div id="html_2f7679b9897d48620342396387468705" style="width: 100.0%; height: 100.0%;">                 <b>North Regional</b><br>                 Region: North<br>                 Capacity: 130<br>                 Current Patients: 390<br>                 Newly Assigned: 130<br>                 Utilization: 400.0%                 </div>`)[0];
+                popup_b009498e976e908f852cad004c4e1212.setContent(html_2f7679b9897d48620342396387468705);
+            
+        
+
+        marker_87b7d6f698d5d5e7fb149f9fc952f8cc.bindPopup(popup_b009498e976e908f852cad004c4e1212)
+        ;
+
+        
+    
+    
+            var marker_c8528b00598cfd0021122c816bf50e31 = L.marker(
+                [39.9434237496214, -99.98329642654578],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_963fc21ccac3b35f72c0d9fe0d99d85f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_c8528b00598cfd0021122c816bf50e31.setIcon(icon_963fc21ccac3b35f72c0d9fe0d99d85f);
+        
+    
+        var popup_0964735fe965071d914668fed605d75c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5ea6c4ee0770dc9239b53a071b886548 = $(`<div id="html_5ea6c4ee0770dc9239b53a071b886548" style="width: 100.0%; height: 100.0%;">                 <b>North University</b><br>                 Region: North<br>                 Capacity: 125<br>                 Current Patients: 385<br>                 Newly Assigned: 125<br>                 Utilization: 408.0%                 </div>`)[0];
+                popup_0964735fe965071d914668fed605d75c.setContent(html_5ea6c4ee0770dc9239b53a071b886548);
+            
+        
+
+        marker_c8528b00598cfd0021122c816bf50e31.bindPopup(popup_0964735fe965071d914668fed605d75c)
+        ;
+
+        
+    
+    
+            var marker_04163e367a82924273da9958df4d090c = L.marker(
+                [40.50172929189317, -99.59373283166761],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_e3b0c2d7d8e35159a2c387a944107635 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_04163e367a82924273da9958df4d090c.setIcon(icon_e3b0c2d7d8e35159a2c387a944107635);
+        
+    
+        var popup_26322bc38d6e2fb2be285b75ce56f3f5 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ecdd535c329bc180e76077affcce2a90 = $(`<div id="html_ecdd535c329bc180e76077affcce2a90" style="width: 100.0%; height: 100.0%;">                 <b>South Central</b><br>                 Region: South<br>                 Capacity: 160<br>                 Current Patients: 440<br>                 Newly Assigned: 160<br>                 Utilization: 375.0%                 </div>`)[0];
+                popup_26322bc38d6e2fb2be285b75ce56f3f5.setContent(html_ecdd535c329bc180e76077affcce2a90);
+            
+        
+
+        marker_04163e367a82924273da9958df4d090c.bindPopup(popup_26322bc38d6e2fb2be285b75ce56f3f5)
+        ;
+
+        
+    
+    
+            var marker_628e72384229ac3f7e6d96ab34a3dc7e = L.marker(
+                [40.573092631299396, -99.53800345756231],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_271fd47581e80fb388c6abc957183f20 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_628e72384229ac3f7e6d96ab34a3dc7e.setIcon(icon_271fd47581e80fb388c6abc957183f20);
+        
+    
+        var popup_2d71753afde32d4ec1d6bdcfe9666e29 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fea05cf906db5f8346adba560e3c7f71 = $(`<div id="html_fea05cf906db5f8346adba560e3c7f71" style="width: 100.0%; height: 100.0%;">                 <b>South Regional</b><br>                 Region: South<br>                 Capacity: 155<br>                 Current Patients: 425<br>                 Newly Assigned: 155<br>                 Utilization: 374.2%                 </div>`)[0];
+                popup_2d71753afde32d4ec1d6bdcfe9666e29.setContent(html_fea05cf906db5f8346adba560e3c7f71);
+            
+        
+
+        marker_628e72384229ac3f7e6d96ab34a3dc7e.bindPopup(popup_2d71753afde32d4ec1d6bdcfe9666e29)
+        ;
+
+        
+    
+    
+            var marker_ce4a73013e4b1fbd3cd78911c65eb374 = L.marker(
+                [40.525212307885354, -99.4400424126779],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_c1464dc52823adf2053f98b50a4c0e13 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_ce4a73013e4b1fbd3cd78911c65eb374.setIcon(icon_c1464dc52823adf2053f98b50a4c0e13);
+        
+    
+        var popup_20ecc0cccb18297ef3f1e3eaa41fe090 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a549143b9a42cfb72ad71a933c9be973 = $(`<div id="html_a549143b9a42cfb72ad71a933c9be973" style="width: 100.0%; height: 100.0%;">                 <b>South University</b><br>                 Region: South<br>                 Capacity: 170<br>                 Current Patients: 480<br>                 Newly Assigned: 170<br>                 Utilization: 382.4%                 </div>`)[0];
+                popup_20ecc0cccb18297ef3f1e3eaa41fe090.setContent(html_a549143b9a42cfb72ad71a933c9be973);
+            
+        
+
+        marker_ce4a73013e4b1fbd3cd78911c65eb374.bindPopup(popup_20ecc0cccb18297ef3f1e3eaa41fe090)
+        ;
+
+        
+    
+    
+            var marker_f55806346c76e558206d09d7c23cebcd = L.marker(
+                [40.38640109301304, -99.51505309191344],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_d35e04dceb01f5898468c180bfdb5fe6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_f55806346c76e558206d09d7c23cebcd.setIcon(icon_d35e04dceb01f5898468c180bfdb5fe6);
+        
+    
+        var popup_4427d19275b44dc9809a76be9aa4c258 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4e2e2fa48461c35ddc96666a0127d870 = $(`<div id="html_4e2e2fa48461c35ddc96666a0127d870" style="width: 100.0%; height: 100.0%;">                 <b>South Memorial</b><br>                 Region: South<br>                 Capacity: 165<br>                 Current Patients: 455<br>                 Newly Assigned: 82<br>                 Utilization: 325.5%                 </div>`)[0];
+                popup_4427d19275b44dc9809a76be9aa4c258.setContent(html_4e2e2fa48461c35ddc96666a0127d870);
+            
+        
+
+        marker_f55806346c76e558206d09d7c23cebcd.bindPopup(popup_4427d19275b44dc9809a76be9aa4c258)
+        ;
+
+        
+    
+    
+            var marker_e4aa23ab4c6349bcc96363c18b597a46 = L.marker(
+                [40.50703559274355, -99.53050059045121],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_10b8d2eeeb1d711be72b08fc93b17556 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_e4aa23ab4c6349bcc96363c18b597a46.setIcon(icon_10b8d2eeeb1d711be72b08fc93b17556);
+        
+    
+        var popup_91e0f27e32a7764b0e584e14c426bda4 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4738356d9ed3e0af6472097a24f8cb3c = $(`<div id="html_4738356d9ed3e0af6472097a24f8cb3c" style="width: 100.0%; height: 100.0%;">                 <b>South Community</b><br>                 Region: South<br>                 Capacity: 150<br>                 Current Patients: 420<br>                 Newly Assigned: 63<br>                 Utilization: 322.0%                 </div>`)[0];
+                popup_91e0f27e32a7764b0e584e14c426bda4.setContent(html_4738356d9ed3e0af6472097a24f8cb3c);
+            
+        
+
+        marker_e4aa23ab4c6349bcc96363c18b597a46.bindPopup(popup_91e0f27e32a7764b0e584e14c426bda4)
+        ;
+
+        
+    
+    
+            var marker_4dad7a162b48540cdb5b9781185bde9f = L.marker(
+                [41.040063242341894, -99.02766627316667],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_e04081ae7e7415d748ef143ecf277784 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_4dad7a162b48540cdb5b9781185bde9f.setIcon(icon_e04081ae7e7415d748ef143ecf277784);
+        
+    
+        var popup_2a1c04a9dda5c0335542698d1138c044 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1a69f8abdf113f7e530dd97dbf4a8edd = $(`<div id="html_1a69f8abdf113f7e530dd97dbf4a8edd" style="width: 100.0%; height: 100.0%;">                 <b>East Care</b><br>                 Region: East<br>                 Capacity: 140<br>                 Current Patients: 410<br>                 Newly Assigned: 140<br>                 Utilization: 392.9%                 </div>`)[0];
+                popup_2a1c04a9dda5c0335542698d1138c044.setContent(html_1a69f8abdf113f7e530dd97dbf4a8edd);
+            
+        
+
+        marker_4dad7a162b48540cdb5b9781185bde9f.bindPopup(popup_2a1c04a9dda5c0335542698d1138c044)
+        ;
+
+        
+    
+    
+            var marker_5e523d72fd3ede398b425bccf9bd5d66 = L.marker(
+                [40.96365545579115, -98.98677904036823],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_8fb0a32a07c3a9d696ecb27480848898 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_5e523d72fd3ede398b425bccf9bd5d66.setIcon(icon_8fb0a32a07c3a9d696ecb27480848898);
+        
+    
+        var popup_6c20a9363f339befebde1ca7b2e30460 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_91509b195957c3b2aec986699196ab69 = $(`<div id="html_91509b195957c3b2aec986699196ab69" style="width: 100.0%; height: 100.0%;">                 <b>East Medical Center</b><br>                 Region: East<br>                 Capacity: 135<br>                 Current Patients: 395<br>                 Newly Assigned: 135<br>                 Utilization: 392.6%                 </div>`)[0];
+                popup_6c20a9363f339befebde1ca7b2e30460.setContent(html_91509b195957c3b2aec986699196ab69);
+            
+        
+
+        marker_5e523d72fd3ede398b425bccf9bd5d66.bindPopup(popup_6c20a9363f339befebde1ca7b2e30460)
+        ;
+
+        
+    
+    
+            var marker_eaa9d99bb9c8660fa1454daadabef350 = L.marker(
+                [40.91842704723069, -98.9175619632086],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_a2b6c0d41fcd691e464ad5562f40840c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_eaa9d99bb9c8660fa1454daadabef350.setIcon(icon_a2b6c0d41fcd691e464ad5562f40840c);
+        
+    
+        var popup_6bde0a2d6f5d622e2bbfea3e7a34c3c0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6832a3dacd6e548980166d76cb7fd9d7 = $(`<div id="html_6832a3dacd6e548980166d76cb7fd9d7" style="width: 100.0%; height: 100.0%;">                 <b>East County</b><br>                 Region: East<br>                 Capacity: 145<br>                 Current Patients: 415<br>                 Newly Assigned: 145<br>                 Utilization: 386.2%                 </div>`)[0];
+                popup_6bde0a2d6f5d622e2bbfea3e7a34c3c0.setContent(html_6832a3dacd6e548980166d76cb7fd9d7);
+            
+        
+
+        marker_eaa9d99bb9c8660fa1454daadabef350.bindPopup(popup_6bde0a2d6f5d622e2bbfea3e7a34c3c0)
+        ;
+
+        
+    
+    
+            var marker_8ee9f2d6cf4f5d76d2d857b74d5c7067 = L.marker(
+                [41.00601811399946, -98.91181938506938],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_860695d4ad288d0fb04e01c1463619f1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_8ee9f2d6cf4f5d76d2d857b74d5c7067.setIcon(icon_860695d4ad288d0fb04e01c1463619f1);
+        
+    
+        var popup_4e10f72eb8b95db15e493da8a8b02517 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e971e7768c386bb82cf1b3cfc74d677d = $(`<div id="html_e971e7768c386bb82cf1b3cfc74d677d" style="width: 100.0%; height: 100.0%;">                 <b>East Regional</b><br>                 Region: East<br>                 Capacity: 150<br>                 Current Patients: 430<br>                 Newly Assigned: 150<br>                 Utilization: 386.7%                 </div>`)[0];
+                popup_4e10f72eb8b95db15e493da8a8b02517.setContent(html_e971e7768c386bb82cf1b3cfc74d677d);
+            
+        
+
+        marker_8ee9f2d6cf4f5d76d2d857b74d5c7067.bindPopup(popup_4e10f72eb8b95db15e493da8a8b02517)
+        ;
+
+        
+    
+    
+            var marker_262fc1b927d56b8ba555c4b14aa86949 = L.marker(
+                [40.90586578820802, -99.05754424663306],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_3ecc0726084660dcb65ca999a94567e0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_262fc1b927d56b8ba555c4b14aa86949.setIcon(icon_3ecc0726084660dcb65ca999a94567e0);
+        
+    
+        var popup_1e0c414b7329e90e7343174f3d47a94f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1e2a2a7a37a1e931b631f87f15102c13 = $(`<div id="html_1e2a2a7a37a1e931b631f87f15102c13" style="width: 100.0%; height: 100.0%;">                 <b>East University</b><br>                 Region: East<br>                 Capacity: 130<br>                 Current Patients: 390<br>                 Newly Assigned: 130<br>                 Utilization: 400.0%                 </div>`)[0];
+                popup_1e0c414b7329e90e7343174f3d47a94f.setContent(html_1e2a2a7a37a1e931b631f87f15102c13);
+            
+        
+
+        marker_262fc1b927d56b8ba555c4b14aa86949.bindPopup(popup_1e0c414b7329e90e7343174f3d47a94f)
+        ;
+
+        
+    
+    
+            var marker_67d6729f36fced3baeb3ec577adcdccc = L.marker(
+                [41.4787794299503, -98.541781507546],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_7471e26ef556c2372f2819cb0620d634 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_67d6729f36fced3baeb3ec577adcdccc.setIcon(icon_7471e26ef556c2372f2819cb0620d634);
+        
+    
+        var popup_43d8a9b6fd0f370026ce9976ebc43ed3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_8e690958362490fc9a3eae1f6c46487e = $(`<div id="html_8e690958362490fc9a3eae1f6c46487e" style="width: 100.0%; height: 100.0%;">                 <b>West Emergency</b><br>                 Region: West<br>                 Capacity: 155<br>                 Current Patients: 435<br>                 Newly Assigned: 155<br>                 Utilization: 380.6%                 </div>`)[0];
+                popup_43d8a9b6fd0f370026ce9976ebc43ed3.setContent(html_8e690958362490fc9a3eae1f6c46487e);
+            
+        
+
+        marker_67d6729f36fced3baeb3ec577adcdccc.bindPopup(popup_43d8a9b6fd0f370026ce9976ebc43ed3)
+        ;
+
+        
+    
+    
+            var marker_531ca96e58468236ff16e78b226d6ed1 = L.marker(
+                [41.635484059483325, -98.47842089886056],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_e96446655c7ff4257a53154895132016 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_531ca96e58468236ff16e78b226d6ed1.setIcon(icon_e96446655c7ff4257a53154895132016);
+        
+    
+        var popup_1eb84c0c367c965e04badb0d60ee65aa = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_0c8140dcf2818d9a569bfcc0a14aa601 = $(`<div id="html_0c8140dcf2818d9a569bfcc0a14aa601" style="width: 100.0%; height: 100.0%;">                 <b>West Health System</b><br>                 Region: West<br>                 Capacity: 145<br>                 Current Patients: 415<br>                 Newly Assigned: 145<br>                 Utilization: 386.2%                 </div>`)[0];
+                popup_1eb84c0c367c965e04badb0d60ee65aa.setContent(html_0c8140dcf2818d9a569bfcc0a14aa601);
+            
+        
+
+        marker_531ca96e58468236ff16e78b226d6ed1.bindPopup(popup_1eb84c0c367c965e04badb0d60ee65aa)
+        ;
+
+        
+    
+    
+            var marker_f1b18d60435a839298662f6fefbff64a = L.marker(
+                [41.55053375884952, -98.45416789992122],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_60f41be692bd6e8f9a5a05432bc1c19d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_f1b18d60435a839298662f6fefbff64a.setIcon(icon_60f41be692bd6e8f9a5a05432bc1c19d);
+        
+    
+        var popup_92a0c5f4aa7373e4689da1c010294867 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_27288cf8acba719fd6cb7455c2609ba3 = $(`<div id="html_27288cf8acba719fd6cb7455c2609ba3" style="width: 100.0%; height: 100.0%;">                 <b>West Children's</b><br>                 Region: West<br>                 Capacity: 120<br>                 Current Patients: 360<br>                 Newly Assigned: 120<br>                 Utilization: 400.0%                 </div>`)[0];
+                popup_92a0c5f4aa7373e4689da1c010294867.setContent(html_27288cf8acba719fd6cb7455c2609ba3);
+            
+        
+
+        marker_f1b18d60435a839298662f6fefbff64a.bindPopup(popup_92a0c5f4aa7373e4689da1c010294867)
+        ;
+
+        
+    
+    
+            var marker_fb2505fcf4fbbb9f4718c1bf9cf64bbf = L.marker(
+                [41.513776178783715, -98.50911612258868],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_3de64c19b8e8f53dcf63d50c5141ad38 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_fb2505fcf4fbbb9f4718c1bf9cf64bbf.setIcon(icon_3de64c19b8e8f53dcf63d50c5141ad38);
+        
+    
+        var popup_5991bb1bfcbd5086990a7e9486e36533 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_cf70d0d478b8b15372f9d7b87a5bed08 = $(`<div id="html_cf70d0d478b8b15372f9d7b87a5bed08" style="width: 100.0%; height: 100.0%;">                 <b>West Regional</b><br>                 Region: West<br>                 Capacity: 140<br>                 Current Patients: 400<br>                 Newly Assigned: 71<br>                 Utilization: 336.4%                 </div>`)[0];
+                popup_5991bb1bfcbd5086990a7e9486e36533.setContent(html_cf70d0d478b8b15372f9d7b87a5bed08);
+            
+        
+
+        marker_fb2505fcf4fbbb9f4718c1bf9cf64bbf.bindPopup(popup_5991bb1bfcbd5086990a7e9486e36533)
+        ;
+
+        
+    
+    
+            var marker_dc5a1746ae86990ff0986be629a48987 = L.marker(
+                [41.48964245185891, -98.52482071381323],
+                {}
+            ).addTo(marker_cluster_bf03766ad599ea8e13ae80395a4b3a26);
+        
+    
+            var icon_9d90c7b7c1a73d3e02f6cc9643f7605f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "hospital", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_dc5a1746ae86990ff0986be629a48987.setIcon(icon_9d90c7b7c1a73d3e02f6cc9643f7605f);
+        
+    
+        var popup_94d813f4361ed3936e0a158dc98ccc56 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6a8c5b9d28fb217800bb3274e24d92a8 = $(`<div id="html_6a8c5b9d28fb217800bb3274e24d92a8" style="width: 100.0%; height: 100.0%;">                 <b>West Medical Center</b><br>                 Region: West<br>                 Capacity: 135<br>                 Current Patients: 395<br>                 Newly Assigned: 57<br>                 Utilization: 334.8%                 </div>`)[0];
+                popup_94d813f4361ed3936e0a158dc98ccc56.setContent(html_6a8c5b9d28fb217800bb3274e24d92a8);
+            
+        
+
+        marker_dc5a1746ae86990ff0986be629a48987.bindPopup(popup_94d813f4361ed3936e0a158dc98ccc56)
+        ;
+
+        
+    
+    
+            marker_cluster_bf03766ad599ea8e13ae80395a4b3a26.addTo(map_d20b3e4194a0b8d33359b41e40779280);
+        
+    
+            var layer_control_12c66e497aeb0beb0b13b0b3077de5d8_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_60cb395a1778c166749ef29fa268cae8,
+                },
+                overlays :  {
+                    "Suppliers" : marker_cluster_8efa06155f540b2d175e291f0f885821,
+                    "Hospitals" : marker_cluster_bf03766ad599ea8e13ae80395a4b3a26,
+                },
+            };
+            let layer_control_12c66e497aeb0beb0b13b0b3077de5d8 = L.control.layers(
+                layer_control_12c66e497aeb0beb0b13b0b3077de5d8_layers.base_layers,
+                layer_control_12c66e497aeb0beb0b13b0b3077de5d8_layers.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_d20b3e4194a0b8d33359b41e40779280);
+
+        
+</script>
+</html>
