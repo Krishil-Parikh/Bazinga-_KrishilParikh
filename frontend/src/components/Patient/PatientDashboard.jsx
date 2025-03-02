@@ -29,7 +29,7 @@ export default function PatientDashboard() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col border-r bg-background">
         <div className="flex h-14 items-center border-b px-4">
-          <h2 className="text-lg font-semibold">MediCare</h2>
+          <h2 className="text-lg font-semibold">Clairva AI</h2>
         </div>
         <nav className="flex-1 overflow-auto py-4">
           <div className="px-4 py-2">
