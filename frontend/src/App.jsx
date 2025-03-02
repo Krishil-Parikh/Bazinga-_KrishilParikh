@@ -1,7 +1,11 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
-import Counter from "./components/Counter"
 import toast, { Toaster } from 'react-hot-toast';
-import { Button } from "@/components/ui/button";
+import AuthPage from "./components/AuthPage/AuthPage";
+import ModeratorInterface from "./components/Moderator/Moderator";
+import Navbar from "./components/Navbar/Navbar";
+import Page from "./components/Hospital/page";
+import PatientDashboard from "./components/Patient/PatientDashboard";
 
 const App = () => {
 
@@ -14,19 +18,25 @@ const App = () => {
   return (
     <>
       <Toaster/>
-      <div className='App text-4xl bg-amber-300 h-screen flex flex-col items-center justify-center'>
-        Boilerplate
-        <Counter/>
-        {/* ShadCN Working! */}
-        <Button
-          variant="solid"
-          size="lg"
-          className="mt-8 bg-green-500 text-white hover:bg-emerald-600"
-        >
-          Click Me
-      </Button>
-      </div>
-      
+      <BrowserRouter>
+        <Routes>
+        <Route path="/" element={
+            <>
+              <Navbar/>
+              <AuthPage/>
+            </>
+          } />
+        <Route path="/moderator" element={ // Moderator Interface
+              <ModeratorInterface/>
+          } />
+        <Route path="/Hdashboard" element={ // Hospital Dashboard
+              <Page/>
+          } />
+        <Route path="/HPatient" element={ // Hospital Patients
+              <PatientDashboard/>
+          } />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

@@ -27,7 +27,7 @@ export const signup = async (req, res) => {
     }
 
     if (password.length < 6) {
-      return res
+      return res 
         .status(400)
         .json({ message: "Password must be at least 6 characters" });
     }
@@ -50,6 +50,7 @@ export const signup = async (req, res) => {
       moderator_number,
       role
     });
+    
 
     if (newUser) {
       generateToken(newUser._id, newUser.role, res);

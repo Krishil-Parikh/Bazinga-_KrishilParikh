@@ -1,8 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
-import CounterReducer from "./CounterSlice/CounterSlice"
+import SidebarReducer from "./SidebarSlice/SidebarSlice";
+import UploadReducer from "./UploadSlice/UploadSlice";
+import UserReducer from "./UserSlice/UserSlice";
+import TranscriptReducer from "./Transcript/Transcript";
+import NotingReducer from "./NotingSlice/NotingSlice";
+import notificationReducer from "./NotificationSlice/NotificationSlice";
 
-export const store = configureStore({
-    reducer: {
-        counter: CounterReducer,
+
+const store = configureStore({
+    reducer:{
+        sidebar : SidebarReducer,
+        upload : UploadReducer,
+        user : UserReducer,
+        notifications: notificationReducer,
+        transcript:TranscriptReducer,
+        noting:NotingReducer,
     },
 });
+
+export default store;
