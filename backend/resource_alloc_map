@@ -8,11 +8,16 @@ import folium
 from folium.plugins import MarkerCluster
 import plotly.express as px
 import plotly.graph_objects as go
+import json
+import os
 from transformers import pipeline
 
 class HealthcareResourceAllocator:
     def __init__(self, patients_file, hospitals_file, suppliers_file, use_llm=False):
         """Initialize the resource allocator with data files."""
+        self.patients_file = patients_file
+        self.hospitals_file = hospitals_file
+        self.suppliers_file = suppliers_file
         self.patients_df = pd.read_csv(patients_file)
         self.hospitals_df = pd.read_csv(hospitals_file)
         self.suppliers_df = pd.read_csv(suppliers_file)
@@ -594,256 +599,532 @@ class HealthcareResourceAllocator:
                 current = row['Current_Patients'] if 'Current_Patients' in self.hospitals_df.columns else 0
                 
                 utilization = (current + assigned_count) / capacity * 100 if capacity > 0 else 0
-                utilization_str = f"{utilization:.1f}%"
+                utilization_text = f"Utilization: {utilization:.1f}%"
                 
-                # Color based on utilization
+                # Choose color based on utilization
                 if utilization < 50:
                     color = 'green'
                 elif utilization < 80:
                     color = 'orange'
                 else:
                     color = 'red'
-                
-                popup_text = f"""
-                <b>{hospital_name}</b><br>
-                Region: {row['Region']}<br>
-                Capacity: {capacity}<br>
-                Current Patients: {current}<br>
-                Newly Assigned: {assigned_count}<br>
-                Utilization: {utilization_str}
-                """
             else:
-                hospital_name = row['Name'] if 'Name' in self.hospitals_df.columns else f"Hospital_{idx}"
-                capacity = row['Beds_Available'] if 'Beds_Available' in self.hospitals_df.columns else 100
+                utilization_text = "Utilization: N/A"
                 color = 'blue'
-                
-                popup_text = f"""
-                <b>{hospital_name}</b><br>
-                Region: {row['Region']}<br>
-                Capacity: {capacity}<br>
-                """
             
-            # Create a popup for this hospital
-            popup = folium.Popup(popup_text, max_width=300)
+            # Create popup content
+            hospital_name = row['Name'] if 'Name' in self.hospitals_df.columns else f"Hospital_{idx}"
+            region = row['Region'] if 'Region' in self.hospitals_df.columns else "Unknown"
             
-            # Create a marker for this hospital
-            hospital_marker = folium.Marker(
+            popup_content = f"""
+            <b>{hospital_name}</b><br>
+            Region: {region}<br>
+            {utilization_text}<br>
+            Beds: {row.get('Beds_Available', 'N/A')}<br>
+            Staff: {row.get('Staff_Available', 'N/A')}
+            """
+            
+            # Add marker to cluster
+            folium.Marker(
                 location=[row['Latitude'], row['Longitude']],
-                popup=popup,
+                popup=folium.Popup(popup_content, max_width=300),
                 icon=folium.Icon(color=color, icon='hospital', prefix='fa')
-            )
-            
-            # Add marker to the cluster
-            hospital_cluster.add_child(hospital_marker)
+            ).add_to(hospital_cluster)
         
-        # Add suppliers to the map if available
-        if not self.suppliers_df.empty and all(col in self.suppliers_df.columns for col in ['Latitude', 'Longitude']):
+        # Add the hospital cluster to the map
+        hospital_cluster.add_to(m)
+        
+        # Add suppliers if they have location data
+        if all(col in self.suppliers_df.columns for col in ['Latitude', 'Longitude']):
             supplier_cluster = MarkerCluster(name="Suppliers")
             
             for idx, row in self.suppliers_df.iterrows():
-                supplier_name = row['Supplier_Name'] if 'Supplier_Name' in self.suppliers_df.columns else f"Supplier_{idx}"
+                supplier_name = row['Name'] if 'Name' in self.suppliers_df.columns else f"Supplier_{idx}"
+                region = row['Region'] if 'Region' in self.suppliers_df.columns else "Unknown"
                 
-                # Create popup text
-                popup_text = f"""
+                popup_content = f"""
                 <b>{supplier_name}</b><br>
-                Region: {row['Region']}<br>
+                Region: {region}<br>
+                Beds: {row.get('Beds', 'N/A')}<br>
+                Staff: {row.get('Staff', 'N/A')}<br>
+                Medical Kits: {row.get('Medical_Kits', 'N/A')}
                 """
                 
-                # Add resource information if available
-                if 'Beds' in self.suppliers_df.columns:
-                    popup_text += f"Beds: {row['Beds']}<br>"
-                if 'Staff' in self.suppliers_df.columns:
-                    popup_text += f"Staff: {row['Staff']}<br>"
-                if 'Medical_Kits' in self.suppliers_df.columns:
-                    popup_text += f"Medical Kits: {row['Medical_Kits']}<br>"
-                
-                # Create a popup for this supplier
-                popup = folium.Popup(popup_text, max_width=300)
-                
-                # Create a marker for this supplier
-                supplier_marker = folium.Marker(
+                folium.Marker(
                     location=[row['Latitude'], row['Longitude']],
-                    popup=popup,
-                    icon=folium.Icon(color='green', icon='medkit', prefix='fa')
-                )
-                
-                # Add marker to the cluster
-                supplier_cluster.add_child(supplier_marker)
+                    popup=folium.Popup(popup_content, max_width=300),
+                    icon=folium.Icon(color='purple', icon='medkit', prefix='fa')
+                ).add_to(supplier_cluster)
             
-            # Add supplier cluster to the map
-            m.add_child(supplier_cluster)
+            supplier_cluster.add_to(m)
         
-        # Add hospital cluster to the map
-        m.add_child(hospital_cluster)
-        
-        # Add layer control to toggle different layers
+        # Add layer control
         folium.LayerControl().add_to(m)
         
         return m
     
-    def create_plotly_visualizations(self):
-        """Create interactive Plotly visualizations of the allocation results."""
-        if self.allocation_results is None:
-            raise ValueError("Must run optimize_allocation() first")
+    def create_dashboard(self, output_dir='dashboard'):
+        """Create a complete dashboard with all visualizations."""
+        # Create output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
         
-        visualizations = {}
-        
-        # 1. Patient Assignment Sunburst Chart
-        if 'Patient_Region' in self.allocation_results.columns and 'Assigned_Hospital' in self.allocation_results.columns:
-            # Create a DataFrame for the sunburst chart
-            region_hospital = self.allocation_results.groupby(['Patient_Region', 'Assigned_Hospital']).size().reset_index()
-            region_hospital.columns = ['Patient_Region', 'Assigned_Hospital', 'Count']
-            
-            # Create sunburst chart
-            fig_sunburst = px.sunburst(
-                region_hospital, 
-                path=['Patient_Region', 'Assigned_Hospital'], 
-                values='Count',
-                title='Patient Assignment by Region and Hospital',
-                color_discrete_sequence=px.colors.qualitative.Pastel
-            )
-            visualizations['sunburst'] = fig_sunburst
-        
-        # 2. Hospital Utilization Gauge Chart
+        # Generate reports
         reports = self.generate_reports()
-        hospital_util = reports['hospital_utilization']
         
-        # Create a list of gauge charts for each hospital
-        gauge_charts = []
-        for hospital, stats in hospital_util.items():
-            if stats['Capacity'] > 0:  # Avoid division by zero
-                fig_gauge = go.Figure(go.Indicator(
-                    mode="gauge+number",
-                    value=stats['Utilization_Percent'],
-                    domain={'x': [0, 1], 'y': [0, 1]},
-                    title={'text': hospital},
-                    gauge={
-                        'axis': {'range': [0, 100]},
-                        'bar': {'color': "darkblue"},
-                        'steps': [
-                            {'range': [0, 50], 'color': "lightgreen"},
-                            {'range': [50, 80], 'color': "orange"},
-                            {'range': [80, 100], 'color': "red"}
-                        ],
-                        'threshold': {
-                            'line': {'color': "red", 'width': 4},
-                            'thickness': 0.75,
-                            'value': 90
-                        }
-                    }
-                ))
-                gauge_charts.append(fig_gauge)
+        # Create visualizations
+        try:
+            allocation_fig = self.visualize_allocation()
+            if allocation_fig:
+                allocation_fig.savefig(os.path.join(output_dir, 'allocation_charts.png'))
+                plt.close(allocation_fig)
+            
+            line_fig = self.create_line_graphs()
+            if line_fig:
+                line_fig.savefig(os.path.join(output_dir, 'trend_charts.png'))
+                plt.close(line_fig)
+            
+            # Create map
+            map_viz = self.create_map_visualization()
+            if map_viz:
+                map_viz.save(os.path.join(output_dir, 'allocation_map.html'))
+        except Exception as e:
+            print(f"Error creating visualizations: {e}")
         
-        if gauge_charts:
-            visualizations['gauges'] = gauge_charts
+        # Create patient allocation table
+        if self.allocation_results is not None:
+            self.allocation_results.to_csv(os.path.join(output_dir, 'patient_allocation.csv'), index=False)
         
-        # 3. Priority Score Distribution
-        if 'Priority_Score' in self.allocation_results.columns:
-            fig_hist = px.histogram(
-                self.allocation_results,
-                x='Priority_Score',
-                color='Assigned_Hospital',
-                title='Distribution of Priority Scores by Hospital Assignment',
-                labels={'Priority_Score': 'Priority Score', 'count': 'Number of Patients'},
-                barmode='overlay',
-                opacity=0.7
-            )
-            visualizations['priority_hist'] = fig_hist
+        # Create supplier allocation table if available
+        if hasattr(self, 'supply_results') and self.supply_results is not None:
+            self.supply_results.to_csv(os.path.join(output_dir, 'supplier_allocation.csv'), index=False)
         
-        # 4. MEWS Score Distribution if available
-        if 'MEWS_Score' in self.allocation_results.columns:
-            fig_mews = px.histogram(
-                self.allocation_results,
-                x='MEWS_Score',
-                color='Assigned_Hospital',
-                title='Distribution of MEWS Scores by Hospital Assignment',
-                labels={'MEWS_Score': 'MEWS Score', 'count': 'Number of Patients'},
-                barmode='overlay',
-                opacity=0.7
-            )
-            visualizations['mews_hist'] = fig_mews
+        # Create summary report
+        with open(os.path.join(output_dir, 'summary_report.json'), 'w') as f:
+            json.dump(reports, f, indent=2)
         
-        return visualizations
+        # Create dashboard HTML
+        self._create_dashboard_html(output_dir, reports)
+        
+        print(f"Dashboard created in {output_dir} directory")
+        return output_dir
     
-    def export_results(self, filename='allocation_results.csv'):
-        """Export allocation results to a CSV file."""
+    def _create_dashboard_html(self, output_dir, reports):
+        """Create the main dashboard HTML file."""
+        # Extract report data
+        patient_summary = reports['patient_summary']
+        hospital_util = reports['hospital_utilization']
+        llm_analysis = reports.get('llm_analysis', None)
+        
+        # Create HTML content
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Healthcare Resource Allocation Dashboard</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+            <style>
+                .card {{ margin-bottom: 20px; }}
+                .highlight {{ background-color: #f8f9fa; padding: 15px; border-radius: 5px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container-fluid mt-4">
+                <h1 class="text-center mb-4">Healthcare Resource Allocation Dashboard</h1>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Patient Allocation Summary</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5>Total Patients: {patient_summary.get('Total_Patients', 0)}</h5>
+                                        <h5>Assigned: {patient_summary.get('Assigned_Patients', 0)} ({(patient_summary.get('Assigned_Patients', 0) / patient_summary.get('Total_Patients', 1) * 100):.1f}%)</h5>
+                                        <h5>Unassigned: {patient_summary.get('Unassigned_Patients', 0)}</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5>Regional Matches: {patient_summary.get('Regional_Matches', 0)}</h5>
+                                        <h5>Avg Priority: {patient_summary.get('Average_Priority_Score', 0):.1f}</h5>
+                                        <h5>High MEWS Patients: {patient_summary.get('High_MEWS_Patients', 'N/A')}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Hospital Utilization</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Hospital</th>
+                                                <th>Capacity</th>
+                                                <th>New Patients</th>
+                                                <th>Utilization</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+        """
+        
+        # Add hospital utilization rows
+        for hospital, stats in hospital_util.items():
+            util_class = "table-success" if stats['Utilization_Percent'] < 70 else ("table-warning" if stats['Utilization_Percent'] < 90 else "table-danger")
+            html_content += f"""
+                                            <tr class="{util_class}">
+                                                <td>{hospital}</td>
+                                                <td>{stats['Capacity']}</td>
+                                                <td>{stats['Newly_Assigned']}</td>
+                                                <td>{stats['Utilization_Percent']:.1f}%</td>
+                                            </tr>
+            """
+            
+        html_content += f"""
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Allocation Visualizations</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <img src="allocation_charts.png" class="img-fluid" alt="Allocation Charts">
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <img src="trend_charts.png" class="img-fluid" alt="Trend Charts">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Interactive Map</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe src="allocation_map.html" width="100%" height="400px" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Analysis & Recommendations</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="highlight">
+        """
+        
+        # Add LLM analysis if available
+        if llm_analysis:
+            html_content += f"<p>{llm_analysis}</p>"
+        else:
+            html_content += """
+                                    <h5>Key Insights:</h5>
+                                    <ul>
+                                        <li>Patient allocation prioritizes high-severity cases with regional matching where possible.</li>
+                                        <li>Hospital utilization is balanced to avoid overloading any single facility.</li>
+                                        <li>Resource distribution from suppliers is optimized for transportation efficiency.</li>
+                                    </ul>
+                                    <h5>Recommendations:</h5>
+                                    <ul>
+                                        <li>Consider increasing capacity at high-utilization hospitals.</li>
+                                        <li>Improve regional distribution of specialized medical equipment.</li>
+                                    </ul>
+            """
+        
+        html_content += """
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <footer class="text-center mt-4 mb-4">
+                    <p>Generated by Healthcare Resource Allocator</p>
+                </footer>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Write HTML to file
+        with open(os.path.join(output_dir, 'index.html'), 'w') as f:
+            f.write(html_content)
+    
+    def export_to_csv(self, output_dir='export'):
+        """Export all results to CSV files."""
+        # Create output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Export allocation results
+        if self.allocation_results is not None:
+            self.allocation_results.to_csv(os.path.join(output_dir, 'patient_allocation.csv'), index=False)
+        
+        # Export supplier allocation if available
+        if hasattr(self, 'supply_results') and self.supply_results is not None:
+            self.supply_results.to_csv(os.path.join(output_dir, 'supplier_allocation.csv'), index=False)
+        
+        # Export summary statistics
+        reports = self.generate_reports()
+        
+        # Convert patient summary to DataFrame
+        patient_summary_df = pd.DataFrame([reports['patient_summary']])
+        patient_summary_df.to_csv(os.path.join(output_dir, 'patient_summary.csv'), index=False)
+        
+        # Convert hospital utilization to DataFrame
+        hospital_util_df = pd.DataFrame.from_dict(reports['hospital_utilization'], orient='index')
+        hospital_util_df.reset_index(inplace=True)
+        hospital_util_df.rename(columns={'index': 'Hospital'}, inplace=True)
+        hospital_util_df.to_csv(os.path.join(output_dir, 'hospital_utilization.csv'), index=False)
+        
+        print(f"Data exported to CSV files in {output_dir} directory")
+        return output_dir
+
+    def export_to_plotly(self, output_dir='plotly_viz'):
+        """Create interactive Plotly visualizations."""
+        # Create output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
+        
         if self.allocation_results is None:
             raise ValueError("Must run optimize_allocation() first")
         
-        self.allocation_results.to_csv(filename, index=False)
-        print(f"Results exported to {filename}")
+        try:
+            # 1. Hospital assignment bar chart
+            hospital_counts = self.allocation_results['Assigned_Hospital'].value_counts().reset_index()
+            hospital_counts.columns = ['Hospital', 'Patients']
+            
+            fig1 = px.bar(hospital_counts, x='Hospital', y='Patients', 
+                         title='Patient Assignments by Hospital',
+                         color='Patients', color_continuous_scale='viridis')
+            fig1.write_html(os.path.join(output_dir, 'hospital_assignments.html'))
+            
+            # 2. Regional match percentage
+            match_pct = self.allocation_results[self.allocation_results['Assigned_Hospital'] != 'Unassigned']
+            if not match_pct.empty:
+                match_pct = match_pct.groupby('Patient_Region')['Is_Regional_Match'].mean().reset_index()
+                match_pct['Match_Percentage'] = match_pct['Is_Regional_Match'] * 100
+                
+                fig2 = px.bar(match_pct, x='Patient_Region', y='Match_Percentage',
+                             title='Regional Match Percentage',
+                             color='Match_Percentage', color_continuous_scale='RdYlGn')
+                fig2.update_layout(yaxis_title='Match Percentage (%)')
+                fig2.write_html(os.path.join(output_dir, 'regional_match.html'))
+            
+            # 3. Hospital utilization
+            reports = self.generate_reports()
+            hospital_util = reports['hospital_utilization']
+            
+            util_df = pd.DataFrame.from_dict(hospital_util, orient='index')
+            util_df.reset_index(inplace=True)
+            util_df.rename(columns={'index': 'Hospital'}, inplace=True)
+            
+            fig3 = go.Figure()
+            
+            # Add utilization bars
+            fig3.add_trace(go.Bar(
+                x=util_df['Hospital'],
+                y=util_df['Utilization_Percent'],
+                name='Utilization %',
+                marker_color=util_df['Utilization_Percent'].apply(
+                    lambda x: 'green' if x < 70 else ('orange' if x < 90 else 'red')
+                )
+            ))
+            
+            # Add capacity line
+            fig3.add_trace(go.Scatter(
+                x=util_df['Hospital'],
+                y=util_df['Capacity'],
+                mode='markers+lines',
+                name='Capacity',
+                yaxis='y2',
+                marker_symbol='circle',
+                marker_size=8,
+                line=dict(color='gray', width=1, dash='dot')
+            ))
+            
+            # Update layout with second y-axis
+            fig3.update_layout(
+                title='Hospital Utilization and Capacity',
+                yaxis=dict(title='Utilization %'),
+                yaxis2=dict(title='Bed Capacity', overlaying='y', side='right'),
+                barmode='group',
+                legend=dict(x=0.1, y=1.1, orientation='h')
+            )
+            
+            fig3.write_html(os.path.join(output_dir, 'hospital_utilization.html'))
+            
+            # 4. Patient priority distribution
+            if 'Priority_Score' in self.allocation_results.columns:
+                fig4 = px.histogram(
+                    self.allocation_results, 
+                    x='Priority_Score',
+                    color='Assigned_Hospital',
+                    marginal='box',
+                    title='Patient Priority Score Distribution'
+                )
+                fig4.update_layout(barmode='overlay', bargap=0.1)
+                fig4.write_html(os.path.join(output_dir, 'priority_distribution.html'))
+            
+            # 5. Create a dashboard that combines all visualizations
+            self._create_plotly_dashboard(output_dir)
+            
+            print(f"Plotly visualizations created in {output_dir} directory")
+            return output_dir
+            
+        except Exception as e:
+            print(f"Error creating Plotly visualizations: {e}")
+            return None
     
-    def export_supplier_allocation(self, filename='supplier_allocation.csv'):
-        """Export supplier allocation results to a CSV file."""
-        if not hasattr(self, 'supply_results') or self.supply_results is None:
-            raise ValueError("Must run allocate_supplier_resources() first")
+    def _create_plotly_dashboard(self, output_dir):
+        """Create a combined Plotly dashboard HTML."""
+        dashboard_html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Interactive Healthcare Allocation Dashboard</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+                .viz-container { height: 500px; margin-bottom: 20px; }
+                .header { padding: 20px; background-color: #f8f9fa; margin-bottom: 20px; }
+            </style>
+        </head>
+        <body>
+            <div class="container-fluid">
+                <div class="header text-center">
+                    <h1>Interactive Healthcare Resource Allocation Dashboard</h1>
+                    <p>Explore the patient allocation and hospital utilization data</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Hospital Assignments</h4>
+                            </div>
+                            <div class="card-body viz-container">
+                                <iframe src="hospital_assignments.html" width="100%" height="100%" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Hospital Utilization</h4>
+                            </div>
+                            <div class="card-body viz-container">
+                                <iframe src="hospital_utilization.html" width="100%" height="100%" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Regional Match Percentage</h4>
+                            </div>
+                            <div class="card-body viz-container">
+                                <iframe src="regional_match.html" width="100%" height="100%" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Priority Score Distribution</h4>
+                            </div>
+                            <div class="card-body viz-container">
+                                <iframe src="priority_distribution.html" width="100%" height="100%" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Geographic Distribution</h4>
+                            </div>
+                            <div class="card-body viz-container">
+                                <iframe src="../dashboard/allocation_map.html" width="100%" height="100%" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <footer class="text-center mt-4 mb-4">
+                    <p>Generated by Healthcare Resource Allocator</p>
+                </footer>
+            </div>
+        </body>
+        </html>
+        """
         
-        self.supply_results.to_csv(filename, index=False)
-        print(f"Supplier allocation results exported to {filename}")
+        # Write HTML to file
+        with open(os.path.join(output_dir, 'dashboard.html'), 'w') as f:
+            f.write(dashboard_html)
 
 # Example usage
 if __name__ == "__main__":
-    # Example file paths
-    patients_file = "/Users/krishilparikh/Synergy/backend/Triage Flagging/final_synthetic_triage_data.csv"
-    hospitals_file = "hospitals.csv"
-    suppliers_file = "supplier.csv"
-    
-    # Create an instance of the allocator
-    allocator = HealthcareResourceAllocator(patients_file, hospitals_file, suppliers_file)
-    
-    # Run optimization
-    allocation_results = allocator.optimize_allocation()
-    print(f"Allocated {sum(allocation_results['Assigned_Hospital'] != 'Unassigned')} out of {len(allocation_results)} patients")
-    
-    # Allocate supplier resources
     try:
+        allocator = HealthcareResourceAllocator(
+            patients_file="/Users/krishilparikh/Synergy/backend/Triage Flagging/final_synthetic_triage_data.csv",
+            hospitals_file="/Users/krishilparikh/Synergy/backend/hospitals.csv",
+            suppliers_file="/Users/krishilparikh/Synergy/backend/supplier.csv"
+        )
+        
+        # Run optimization
+        allocation_results = allocator.optimize_allocation()
+        print(f"Allocated {sum(allocation_results['Assigned_Hospital'] != 'Unassigned')} out of {len(allocation_results)} patients")
+        
+        # Allocate supplier resources
         supply_results = allocator.allocate_supplier_resources()
         print(f"Generated {len(supply_results)} supplier allocations")
-    except Exception as e:
-        print(f"Failed to allocate supplier resources: {e}")
-    
-    # Generate reports
-    reports = allocator.generate_reports()
-    print("Patient Summary:")
-    for key, value in reports['patient_summary'].items():
-        print(f"  {key}: {value}")
-    
-    # Create visualizations
-    try:
-        plt.close('all')  # Close any existing plots
-        fig = allocator.visualize_allocation()
-        fig.savefig("allocation_visualization.png")
-        print("Saved visualization to allocation_visualization.png")
         
-        fig_line = allocator.create_line_graphs()
-        fig_line.savefig("allocation_trends.png")
-        print("Saved trend graphs to allocation_trends.png")
+        # Create dashboard
+        dashboard_dir = allocator.create_dashboard()
+        print(f"Dashboard created in {dashboard_dir}")
         
-        # Create map visualization
-        m = allocator.create_map_visualization()
-        if m:
-            m.save("allocation_map.html")
-            print("Saved interactive map to allocation_map.html")
+        # Export data
+        export_dir = allocator.export_to_csv()
+        print(f"Data exported to {export_dir}")
         
-        # Create Plotly visualizations
-        plotly_viz = allocator.create_plotly_visualizations()
-        if plotly_viz:
-            for name, fig in plotly_viz.items():
-                if name != 'gauges':  # Handle the special case of multiple gauge charts
-                    fig.write_html(f"plotly_{name}.html")
-                    print(f"Saved Plotly visualization to plotly_{name}.html")
-                else:
-                    for i, gauge in enumerate(fig):
-                        gauge.write_html(f"plotly_gauge_{i}.html")
-                    print(f"Saved {len(fig)} gauge visualizations")
-                    
+        # Create interactive Plotly visualizations
+        plotly_dir = allocator.export_to_plotly()
+        print(f"Interactive visualizations created in {plotly_dir}")
+        
     except Exception as e:
-        print(f"Failed to create some visualizations: {e}")
-    
-    # Export results
-    allocator.export_results()
-    
-    try:
-        allocator.export_supplier_allocation()
-    except Exception as e:
-        print(f"Failed to export supplier allocation: {e}")
+        print(f"Error: {e}")
+
