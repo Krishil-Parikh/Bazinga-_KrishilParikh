@@ -4,6 +4,9 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.route.js'
+import patientRoutes from './routes/patient.route.js'
+import hospitalRoutes from './routes/hospital.route.js'
+import resourceRoutes from './routes/resource.route.js'
 
 dotenv.config({
   path: './.env'
@@ -25,7 +28,10 @@ app.use(
 );
 
 
-app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
+app.use("/patient", patientRoutes);
+app.use("/hospital", hospitalRoutes);
+app.use("/resource", resourceRoutes);
 
   connectDB()
 .then(() => {
