@@ -7,7 +7,8 @@ import { verifyToken } from "../utils/utils.js";
 
 const router = express.Router();
 
-router.post("/register", verifyToken, patientRegister);
+// router.post("/register", verifyToken, patientRegister);
+router.post("/register", patientRegister);
 router.get("/fetch", verifyToken, getPatient);
 
 

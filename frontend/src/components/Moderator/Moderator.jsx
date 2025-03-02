@@ -32,7 +32,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import SidebarInterface from "../Sidebar/Sidebar"
+import Navbar from "../Navbar/Navbar"
 
 export default function ModeratorInterface() {
   const [date, setDate] = useState(new Date())
@@ -94,30 +94,43 @@ export default function ModeratorInterface() {
     setFormData((prev) => ({ ...prev, timeOfArrival: date }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Form submitted:", formData)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
 
-    // Check if required fields are filled
-    const requiredFields = ["age", "gender", "heartRate", "systolicBP", "diastolicBP", "triagePriority"]
-    const missingFields = requiredFields.filter((field) => !formData[field])
+    const requiredFields = ["age", "gender", "heartRate", "systolicBP", "diastolicBP"];
+    const missingFields = requiredFields.filter((field) => !formData[field]);
 
     if (missingFields.length > 0) {
-      toast({
-        variant: "destructive",
-        title: "Error: Please check the missing fields",
-        description: `Missing: ${missingFields.join(", ")}`,
-      })
-    } else {
-      toast({
-        title: "Patient record successfully saved!",
-        description: "The patient has been added to the system.",
-      })
-
-      // Reset form after successful submission
-      // setFormData({...}) - Uncomment to reset form
+        toast.error(`Missing fields: ${missingFields.join(", ")}`);
+        return;
     }
-  }
+
+    try {
+        const response = await fetch("http://localhost:8000/patient/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming token is stored in localStorage
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+        console.log("Response:", data);
+
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to register patient");
+        }
+
+        toast.success("Patient record successfully saved!");
+
+        // Reset form after successful submission
+        // setFormData({...}) - Uncomment if needed
+    } catch (error) {
+        toast.error(`Submission Failed: ${error.message}`);
+    }
+};
 
   const handleCancel = () => {
     // Reset form
@@ -128,15 +141,13 @@ export default function ModeratorInterface() {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
-        {/* Sidebar */}
-        {/* <SidebarInterface/> */}
+      <Navbar/>
 
         {/* Main Content */}
-        <div className="flex flex-col flex-1 justify-center w-">
+        <div className="flex flex-col flex-1 justify-center mt-[5rem]">
           {/* Header */}
           <header className="border-b">
             <div className="flex h-16 items-center px-4 gap-4">
-              {/* <SidebarTrigger /> */}
               <div className="flex-1 flex items-center">
                 <div className="relative w-full max-w-sm">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -220,9 +231,9 @@ export default function ModeratorInterface() {
                                 <SelectValue placeholder="Select gender" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
+                                <SelectItem value="Male">Male</SelectItem>
+                                <SelectItem value="Female">Female</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -605,7 +616,7 @@ export default function ModeratorInterface() {
                       <X className="mr-2 h-4 w-4" />
                       Cancel
                     </Button>
-                    <Button type="submit">
+                    <Button type="submit" onClick={handleSubmit}>
                       <Save className="mr-2 h-4 w-4" />
                       Submit Patient Data
                     </Button>

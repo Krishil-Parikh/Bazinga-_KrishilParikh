@@ -35,21 +35,21 @@ const Login = () => {
                 return;
             }
             setLoading(true)
-            const {data} = await axios.post('http://localhost:8500/auth/login', userData);
+            const {data} = await axios.post('http://localhost:8000/auth/login', userData);
             console.log("User data : ",data);
             toast.success("Logged in successfully 🎉",{
                 position:"top-right"
             })
-            navigate('/dashboard')
-            localStorage.setItem("airesumex_token", JSON.stringify(data.token));
-            localStorage.setItem("airesumex_user", JSON.stringify(data));
-            const userD = {
-                email:data.email,
-                username:data.username,
-                name:data.name,
-            }
-            localStorage.setItem("user", JSON.stringify(userD));
-            dispatch(changeUserDetails(userD))
+            navigate('/moderator')
+            // localStorage.setItem("airesumex_token", JSON.stringify(data.token));
+            // localStorage.setItem("airesumex_user", JSON.stringify(data));
+            // const userD = {
+            //     email:data.email,
+            //     username:data.username,
+            //     name:data.name,
+            // }
+            localStorage.setItem("user", JSON.stringify(data));
+            // dispatch(changeUserDetails(userD))
             setLoading(false);
         } catch (error) {
             console.log("Login failed", error);

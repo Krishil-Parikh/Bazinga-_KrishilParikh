@@ -53,8 +53,8 @@ export const patientRegister = async (req, res) => {
         !painLevel ||
         !symptoms ||
         !initialDiagnosis ||
-        !triagePriority ||
-        !reggedBy ||
+        // !triagePriority ||
+        // !reggedBy ||
         !arrivalMode
       ) {
         return res.status(400).json({ message: "All required fields must be provided" });

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const patientSchema = new mongoose.Schema({
   // Personal Information
   age: { type: Number, required: true },
-  gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+  gender: { type: String, required: true },
 
   // Vital Signs
   heartRate: { type: Number, required: true },
@@ -31,7 +31,7 @@ const patientSchema = new mongoose.Schema({
   // Symptoms & Initial Assessment
   symptoms: { type: String, required: true },
   initialDiagnosis: { type: String, required: true },
-  triagePriority: { type: String, required: true },
+  triagePriority: { type: String },
   reggedBy: {
     type: String,
     enum: ["hospital", "camp"], // Role options
