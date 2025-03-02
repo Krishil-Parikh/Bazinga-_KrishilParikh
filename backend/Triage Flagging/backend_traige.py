@@ -12,9 +12,9 @@ from datetime import datetime
 warnings.filterwarnings('ignore')
 
 class TriageAIAgent:
-    def __init__(self, model_path="triage_priority_model.h5", 
-                encoders_path="label_encoders.pkl", 
-                scaler_path="scaler.pkl",
+    def __init__(self, model_path="/Users/krishilparikh/Synergy/backend/Triage Flagging/triage_priority_model.h5", 
+                encoders_path="/Users/krishilparikh/Synergy/backend/Triage Flagging/label_encoders.pkl", 
+                scaler_path="/Users/krishilparikh/Synergy/backend/Triage Flagging/scaler.pkl",
                 api_key=None):
         """Initialize the Triage AI Agent with necessary models and encoders"""
         self.model = load_model(model_path)

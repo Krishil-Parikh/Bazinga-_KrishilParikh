@@ -4,10 +4,16 @@ import pulp as pl
 from datetime import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
+import json
+import os
 
 class HealthcareResourceAllocator:
     def __init__(self, patients_file, hospitals_file, suppliers_file):
         """Initialize the resource allocator with data files."""
+        self.patients_file = patients_file
+        self.hospitals_file = hospitals_file
+        self.suppliers_file = suppliers_file
+        
         self.patients_df = pd.read_csv(patients_file)
         self.hospitals_df = pd.read_csv(hospitals_file)
         self.suppliers_df = pd.read_csv(suppliers_file)
@@ -325,66 +331,154 @@ class HealthcareResourceAllocator:
             'hospital_utilization': hospital_util
         }
     
-    def visualize_allocation(self):
-        """Create visualizations of the allocation results."""
+    def get_patient_status(self, mews_score=None, triage_priority=None):
+        """Determine patient status based on MEWS score or triage priority."""
+        if mews_score is not None:
+            if mews_score >= 7:
+                return "Critical"
+            elif mews_score >= 5:
+                return "Urgent"
+            elif mews_score >= 3:
+                return "Semi-Urgent"
+            else:
+                return "Stable"
+        elif triage_priority is not None:
+            # Lower numbers are higher priority
+            if triage_priority in [1, 'Immediate', 'Emergency']:
+                return "Critical"
+            elif triage_priority in [2, 'Urgent']:
+                return "Urgent"
+            elif triage_priority in [3, 'Semi-urgent']:
+                return "Semi-Urgent"
+            else:
+                return "Routine"
+        else:
+            return "Unknown"
+    
+    def create_patient_json(self):
+        """Create JSON representation of patients with required fields."""
         if self.allocation_results is None:
             raise ValueError("Must run optimize_allocation() first")
         
-        # Check if visualization dependencies are available
-        try:
-            import matplotlib.pyplot as plt
-            import seaborn as sns
-        except ImportError:
-            print("Visualization dependencies (matplotlib, seaborn) not available.")
-            return None
+        patients_json = []
         
-        # Create a figure with multiple subplots
-        fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+        for idx, row in self.allocation_results.iterrows():
+            patient_id = row['Patient_ID']
+            
+            # Find original patient data
+            patient_idx = None
+            if 'Patient ID' in self.patients_df.columns:
+                matches = self.patients_df[self.patients_df['Patient ID'] == patient_id].index
+                if len(matches) > 0:
+                    patient_idx = matches[0]
+            
+            if patient_idx is None:
+                # Try to match by index if Patient ID didn't work
+                if isinstance(patient_id, int) and patient_id < len(self.patients_df):
+                    patient_idx = patient_id
+            
+            if patient_idx is not None:
+                orig_patient = self.patients_df.loc[patient_idx]
+                
+                # Get wait time
+                wait_time = None
+                if 'Time of Arrival' in orig_patient and pd.notna(orig_patient['Time of Arrival']):
+                    arrive_time = pd.to_datetime(orig_patient['Time of Arrival'])
+                    wait_time = (datetime.now() - arrive_time).total_seconds() / 60  # in minutes
+                
+                # Extract symptoms
+                symptoms = orig_patient.get('Symptoms', orig_patient.get('Chief Complaint', 'Not recorded'))
+                
+                # Get triage priority or MEWS score for status
+                triage_priority = None
+                if 'Triage Priority' in orig_patient:
+                    triage_priority = orig_patient['Triage Priority']
+                elif 'Triage_Priority_Numeric' in orig_patient:
+                    triage_priority = orig_patient['Triage_Priority_Numeric']
+                
+                mews_score = orig_patient.get('MEWS_Score', None)
+                
+                # Determine status
+                status = self.get_patient_status(mews_score, triage_priority)
+                
+                # Get diagnosis if available
+                diagnosis = orig_patient.get('Diagnosis', orig_patient.get('Preliminary Diagnosis', 'Pending'))
+                
+                # Create patient JSON entry
+                patient_entry = {
+                    "id": str(patient_id),
+                    "name": row['Patient_Name'],
+                    "symptoms": symptoms,
+                    "waittime": int(wait_time) if wait_time is not None else "Unknown",
+                    "admission_time": orig_patient.get('Time of Arrival', "Unknown"),
+                    "diagnosis": diagnosis,
+                    "status": status,
+                    "assigned_hospital": row['Assigned_Hospital'],
+                    "mews_score": float(mews_score) if mews_score is not None else None,
+                    "triage_priority": triage_priority
+                }
+                
+                patients_json.append(patient_entry)
         
-        # 1. Patient assignment by hospital
-        hospital_counts = self.allocation_results['Assigned_Hospital'].value_counts()
-        sns.barplot(x=hospital_counts.index, y=hospital_counts.values, ax=axes[0,0])
-        axes[0,0].set_title('Patient Assignments by Hospital')
-        axes[0,0].set_xticklabels(axes[0,0].get_xticklabels(), rotation=45, ha='right')
-        
-        # 2. Assignment by patient region
-        region_counts = self.allocation_results.groupby('Patient_Region')['Assigned_Hospital'].apply(
-            lambda x: sum(x != 'Unassigned')).reset_index()
-        region_counts.columns = ['Region', 'Assigned Patients']
-        sns.barplot(x='Region', y='Assigned Patients', data=region_counts, ax=axes[0,1])
-        axes[0,1].set_title('Patient Assignments by Region')
-        
-        # 3. Regional match percentage
-        match_pct = self.allocation_results[self.allocation_results['Assigned_Hospital'] != 'Unassigned']
-        if not match_pct.empty:
-            match_pct = match_pct.groupby('Patient_Region')['Is_Regional_Match'].mean() * 100
-            match_pct = match_pct.reset_index()
-            match_pct.columns = ['Region', 'Regional Match Percentage']
-            sns.barplot(x='Region', y='Regional Match Percentage', data=match_pct, ax=axes[1,0])
-            axes[1,0].set_title('Regional Match Percentage')
-        else:
-            axes[1,0].set_title('No Regional Match Data Available')
-        
-        # 4. Assignment by MEWS score if available
-        if 'MEWS_Score' in self.allocation_results.columns:
-            try:
-                mews_groups = pd.cut(self.allocation_results['MEWS_Score'], bins=[0, 2, 4, 6, 9], 
-                                    labels=['0-2', '3-4', '5-6', '7-9'])
-                mews_assigned = self.allocation_results.groupby(mews_groups)['Assigned_Hospital'].apply(
-                    lambda x: sum(x != 'Unassigned') / len(x) * 100 if len(x) > 0 else 0).reset_index()
-                mews_assigned.columns = ['MEWS Score', 'Percentage Assigned']
-                sns.barplot(x='MEWS Score', y='Percentage Assigned', data=mews_assigned, ax=axes[1,1])
-                axes[1,1].set_title('Assignment Rate by MEWS Score')
-            except:
-                axes[1,1].set_title('MEWS Score Analysis Unavailable')
-        else:
-            axes[1,1].set_title('MEWS Score Data Not Available')
-        
-        plt.tight_layout()
-        return fig
+        return patients_json
     
-    def run_full_allocation(self):
+    def update_csv_files(self, patients_json):
+        """Update the CSV files with allocation results."""
+        # Update patients CSV with assignments
+        for patient in patients_json:
+            patient_id = patient['id']
+            
+            # Find the patient in the dataframe
+            if 'Patient ID' in self.patients_df.columns:
+                mask = self.patients_df['Patient ID'].astype(str) == str(patient_id)
+                if mask.any():
+                    # Update patient information
+                    self.patients_df.loc[mask, 'Assigned_Hospital'] = patient['assigned_hospital']
+                    self.patients_df.loc[mask, 'Status'] = patient['status']
+                    
+                    # Update diagnosis if it was 'Pending'
+                    if 'Diagnosis' in self.patients_df.columns:
+                        if pd.isna(self.patients_df.loc[mask, 'Diagnosis']).any() or self.patients_df.loc[mask, 'Diagnosis'].iloc[0] == 'Pending':
+                            self.patients_df.loc[mask, 'Diagnosis'] = patient['diagnosis']
+        
+        # Update hospitals CSV with new patient counts
+        if 'Name' in self.hospitals_df.columns:
+            hospital_counts = self.allocation_results['Assigned_Hospital'].value_counts()
+            
+            for hospital_name, count in hospital_counts.items():
+                if hospital_name != 'Unassigned':
+                    mask = self.hospitals_df['Name'] == hospital_name
+                    if mask.any():
+                        # Update patient counts
+                        if 'Current_Patients' in self.hospitals_df.columns:
+                            self.hospitals_df.loc[mask, 'Current_Patients'] += count
+                        else:
+                            self.hospitals_df.loc[mask, 'Current_Patients'] = count
+                        
+                        # Update available beds
+                        if 'Beds_Available' in self.hospitals_df.columns:
+                            self.hospitals_df.loc[mask, 'Beds_Available'] -= count
+                            # Ensure no negative values
+                            self.hospitals_df.loc[self.hospitals_df['Beds_Available'] < 0, 'Beds_Available'] = 0
+        
+        # Save updated CSVs
+        self.patients_df.to_csv(self.patients_file, index=False)
+        self.hospitals_df.to_csv(self.hospitals_file, index=False)
+        
+        return True
+    
+    def save_json_output(self, output_file="patients_allocation.json"):
+        """Save patient data to a JSON file."""
+        patients_json = self.create_patient_json()
+        
+        with open(output_file, 'w') as f:
+            json.dump(patients_json, f, indent=2, default=str)
+        
+        return output_file
+    
+    def run_full_allocation(self, update_csv=True, save_json=True, json_file="patients_allocation.json"):
         """Run the complete allocation process and return results."""
+        # Run optimization
         patient_allocation = self.optimize_allocation()
         
         try:
@@ -395,21 +489,41 @@ class HealthcareResourceAllocator:
             
         reports = self.generate_reports()
         
+        # Create patient JSON
+        patients_json = self.create_patient_json()
+        
+        # Update CSV files if requested
+        if update_csv:
+            self.update_csv_files(patients_json)
+        
+        # Save JSON output if requested
+        if save_json:
+            self.save_json_output(json_file)
+            
         return {
             'patient_allocation': patient_allocation,
             'supplier_allocation': supplier_allocation,
-            'reports': reports
+            'reports': reports,
+            'patients_json': patients_json
         }
 
 
 # Example usage
 def main():
     # Create the allocator (using actual file paths)
-    allocator = HealthcareResourceAllocator('/Users/krishilparikh/Synergy/backend/Triage Flagging/final_synthetic_triage_data.csv', 'hospitals.csv', 'supplier.csv')
+    patients_file = '/Users/krishilparikh/Synergy/backend/Triage Flagging/final_synthetic_triage_data.csv'  # Update with your actual path
+    hospitals_file = '/Users/krishilparikh/Synergy/backend/hospitals.csv'
+    suppliers_file = '/Users/krishilparikh/Synergy/backend/supplier.csv'
     
-    # Run the allocation
+    allocator = HealthcareResourceAllocator(patients_file, hospitals_file, suppliers_file)
+    
+    # Run the allocation with CSV updates and JSON output
     try:
-        results = allocator.run_full_allocation()
+        results = allocator.run_full_allocation(
+            update_csv=True,
+            save_json=True,
+            json_file="patients_allocation.json"
+        )
         
         # Display example results
         print("Patient Allocation Summary:")
@@ -417,30 +531,20 @@ def main():
         print(f"Assigned: {results['reports']['patient_summary']['Assigned_Patients']} " + 
               f"({results['reports']['patient_summary']['Assigned_Patients'] / results['reports']['patient_summary']['Total_Patients'] * 100:.1f}%)")
         
-        if 'Regional_Matches' in results['reports']['patient_summary']:
-            print(f"Regional Matches: {results['reports']['patient_summary']['Regional_Matches']}")
-        
         # Hospital utilization
         print("\nHospital Utilization:")
         for hospital, stats in results['reports']['hospital_utilization'].items():
             print(f"{hospital}: {stats['Newly_Assigned']} new patients, {stats['Utilization_Percent']:.1f}% total utilization")
         
-        # Sample of patient assignments
-        print("\nSample Patient Assignments:")
-        print(results['patient_allocation'].head())
+        # Report on JSON output
+        print(f"\nPatient JSON data saved to 'patients_allocation.json' with {len(results['patients_json'])} patients")
         
-        # Sample of supplier allocations
-        print("\nSample Supplier Allocations:")
-        print(results['supplier_allocation'].head() if not results['supplier_allocation'].empty else "No supplier allocations needed")
+        # Display sample of the JSON data
+        print("\nSample Patient JSON:")
+        if results['patients_json']:
+            print(json.dumps(results['patients_json'][0], indent=2))
         
-        # Create and save visualizations
-        try:
-            fig = allocator.visualize_allocation()
-            if fig:
-                fig.savefig('allocation_results.png')
-                print("\nVisualization saved as 'allocation_results.png'")
-        except Exception as e:
-            print(f"Visualization failed: {e}")
+        print("\nCSV files have been updated with allocation results")
     
     except Exception as e:
         print(f"Error in allocation process: {e}")
